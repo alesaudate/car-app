@@ -1,0 +1,613 @@
+{
+	"info": {
+		"_postman_id": "a21d7e4f-fc42-443e-ad8d-8811b964bd01",
+		"name": "C.A.R API",
+		"description": "The C.A.R API provides a mechanism that allows to register drivers and passengers. Then, passengers can fulfill travel requests, which will be used by drivers to list travel requests that are nearby them. ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Drivers",
+			"item": [
+				{
+					"name": "Create driver",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var driverId = jsonData.id;",
+									"",
+									"pm.collectionVariables.set(\"driverId\", driverId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomFullName}}\", \n    \"birth_date\": \"{{randomISODate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/drivers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List drivers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find driver",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/{{driverId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Full update driver",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomFullName}}\", \n    \"birth_date\": \"{{randomISODate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/drivers/{{driverId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Partial update driver birth date",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"birth_date\": \"{{randomISODate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/drivers/{{driverId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Partial update driver name",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomFullName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/drivers/{{driverId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete driver",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/{{driverId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Passengers",
+			"item": [
+				{
+					"name": "Create passenger",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var passengerId = jsonData.id;",
+									"",
+									"",
+									"pm.collectionVariables.set(\"passengerId\", passengerId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomFullName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/passengers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"passengers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List passengers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var passengerId = jsonData.id;",
+									"",
+									"",
+									"pm.collectionVariables.set(\"passengerId\", passengerId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomFullName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/passengers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"passengers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find passenger",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var passengerId = jsonData.id;",
+									"",
+									"",
+									"pm.collectionVariables.set(\"passengerId\", passengerId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomFullName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/passengers/{{passengerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"passengers",
+								"{{passengerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Full update passenger",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var passengerId = jsonData.id;",
+									"",
+									"",
+									"pm.collectionVariables.set(\"passengerId\", passengerId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomFullName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/passengers/{{passengerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"passengers",
+								"{{passengerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Partial update passenger",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var passengerId = jsonData.id;",
+									"",
+									"",
+									"pm.collectionVariables.set(\"passengerId\", passengerId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomFullName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/passengers/{{passengerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"passengers",
+								"{{passengerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete passenger",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var passengerId = jsonData.id;",
+									"",
+									"",
+									"pm.collectionVariables.set(\"passengerId\", passengerId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/passengers/{{passengerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"passengers",
+								"{{passengerId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Travel Requests",
+			"item": [
+				{
+					"name": "Create travel request",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.replaceIn('{{passengerId}}');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"passenger_id\" : {{passengerId}},\n    \"origin\": \"Avenida Paulista, 800\",\n    \"destination\": \"Rua Marquês de Itu, 295\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/travel-requests",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"travel-requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find nearby travel requests",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.replaceIn('{{passengerId}}');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"passenger_id\" : {{passengerId}},\n    \"origin\": \"Avenida Paulista, 800\",\n    \"destination\": \"Rua Marquês de Itu, 295\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/travel-requests/nearby?currentAddress=Avenida Paulista, 123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"travel-requests",
+								"nearby"
+							],
+							"query": [
+								{
+									"key": "currentAddress",
+									"value": "Avenida Paulista, 123"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"function randomDate(start, end) {",
+					"    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));",
+					"}",
+					"var date = randomDate(new Date(1960, 0, 1), new Date(2000,0,1));",
+					"var month = '' + (date.getMonth() + 1),",
+					"    day = '' + date.getDate(),",
+					"    year = date.getFullYear();",
+					"",
+					"if (month.length < 2) ",
+					"    month = '0' + month;",
+					"if (day.length < 2) ",
+					"    day = '0' + day;",
+					"",
+					"var formattedDate = [year, month, day].join('-');",
+					"pm.environment.set(\"randomISODate\", formattedDate);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "passengerId",
+			"value": ""
+		},
+		{
+			"key": "driverId",
+			"value": ""
+		}
+	]
+}

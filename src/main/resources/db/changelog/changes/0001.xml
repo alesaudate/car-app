@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="carapp_0001" author="Alexandre Saudate">
+        <createTable tableName="driver">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="driver_id_pk"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="birth_date" type="date"/>
+        </createTable>
+
+        <createTable tableName="passenger">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="passenger_id_pk"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+
+        <createTable tableName="travel_request">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="travel_request_id_pk"/>
+            </column>
+            <column name="passenger_id" type="bigint"/>
+            <column name="origin" type="varchar(511)"/>
+            <column name="destination" type="varchar(511)"/>
+            <column name="status" type="varchar(64)"/>
+            <column name="creation_date" type="timestamp"/>
+        </createTable>
+
+        <addAutoIncrement tableName="driver" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+        <addAutoIncrement tableName="passenger" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+        <addAutoIncrement tableName="travel_request" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+
+        <addForeignKeyConstraint baseColumnNames="passenger_id"
+                                 baseTableName="travel_request"
+                                 constraintName="fk_travel_request_passenger"
+                                 referencedColumnNames="id"
+                                 referencedTableName="passenger"
+        />
+
+    </changeSet>
+</databaseChangeLog>

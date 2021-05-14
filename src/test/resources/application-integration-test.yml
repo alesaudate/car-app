@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/carapp
+    username: root
+    password: password
+
+app:
+  interfaces:
+    outcoming:
+      gmaps:
+        host: http://localhost:8080
+        appKey: 123
