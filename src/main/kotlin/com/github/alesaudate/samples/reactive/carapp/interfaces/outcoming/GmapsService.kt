@@ -13,38 +13,39 @@ import java.lang.RuntimeException
 
 @Service
 class GmapsService(
-        @Value("\${app.interfaces.outcoming.gmaps.appKey}")
-        val appKey: String,
+    @Value("\${app.interfaces.outcoming.gmaps.appKey}")
+    val appKey: String,
 
-        @Value("\${app.interfaces.outcoming.gmaps.host:https://maps.googleapis.com}")
-        val gMapsHost: String,
+    @Value("\${app.interfaces.outcoming.gmaps.host:https://maps.googleapis.com}")
+    val gMapsHost: String,
 
-        @Qualifier("GMaps")
-        val webClientBuider: WebClient.Builder
+    @Qualifier("GMaps")
+    val webClientBuider: WebClient.Builder
 ) {
 
-        fun getDistanceBetweenAddresses(addressOne: String, addressTwo: String) : Mono<Int> {
+    fun getDistanceBetweenAddresses(addressOne: String, addressTwo: String): Mono<Int> {
 
-                return webClientBuider.baseUrl(gMapsHost)
+        return webClientBuider.baseUrl(gMapsHost)
+            .build()
+            .get()
+            .uri { uriBuilder ->
+                uriBuilder.path(GMAPS_RESOURCE)
+                    .queryParam("origin", addressOne)
+                    .queryParam("destination", addressTwo)
+                    .queryParam("key", appKey)
                     .build()
-                    .get()
-                    .uri { uriBuilder -> uriBuilder.path(GMAPS_RESOURCE)
-                        .queryParam("origin", addressOne)
-                        .queryParam("destination", addressTwo)
-                        .queryParam("key", appKey)
-                        .build()
-                    }
-                    .retrieve()
-                    .toEntity(String::class.java)
-                    .mapNotNull { it.body }
-                    .map { asDocumentContext(it!!) }
-                    .doOnNext { detectError(it) }
-                    .map { findDuration(it!!) }
-                    .onErrorContinue {
-                            throwable, _ -> warn("Google Maps could not fetch data for distance between $addressOne and $addressTwo", throwable)
-                    }
-        }
-
+            }
+            .retrieve()
+            .toEntity(String::class.java)
+            .mapNotNull { it.body }
+            .map { asDocumentContext(it!!) }
+            .doOnNext { detectError(it) }
+            .map { findDuration(it!!) }
+            .onErrorContinue {
+                throwable, _ ->
+                warn("Google Maps could not fetch data for distance between $addressOne and $addressTwo", throwable)
+            }
+    }
 
     private fun asDocumentContext(body: String) = JsonPath.parse(body)
 
@@ -52,23 +53,17 @@ class GmapsService(
 
         val errorMessage = documentContext.read<String?>("\$.error_message")
         errorMessage?.let { throw GMapsException(it) }
-
     }
 
-    private fun findDuration(documentContext: DocumentContext) : Int {
+    private fun findDuration(documentContext: DocumentContext): Int {
 
         val rawResults: JSONArray = documentContext.read("\$..legs[*].duration.value")
         return rawResults.map { it as Int }.minOrNull() ?: Int.MAX_VALUE
-
     }
-
-
 
     companion object {
         private const val GMAPS_RESOURCE = "/maps/api/directions/json"
     }
-
 }
-
 
 data class GMapsException(override val message: String?) : RuntimeException(message)

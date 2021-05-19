@@ -1,0 +1,52 @@
+configurations {
+    integrationTestImplementation {
+        extendsFrom testImplementation
+    }
+    integrationTestRuntimeOnly {
+        extendsFrom testRuntimeOnly
+    }
+    integrationTestCompileOnly {
+        extendsFrom testCompileOnly
+    }
+    testCompileOnly {
+        extendsFrom compileOnly
+    }
+}
+
+sourceSets {
+    test {
+        java {
+            // exclude integration tests from the default test source set
+            exclude "**/*IT.kt"
+        }
+    }
+
+    integrationTest {
+        // uses the main application code
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+        java {
+            // the tests are at the same directory (or directories) as the unit tests
+            srcDirs = sourceSets.test.java.srcDirs
+
+            // exclude the unit tests from the integration tests source set
+            exclude "**/*UnitTest.kt"
+        }
+        resources {
+            // same resources directory (or directories) with the unit tests
+            srcDirs = sourceSets.test.resources.srcDirs
+        }
+    }
+}
+
+// define the task for integration tests
+task integrationTest(type: Test) {
+    description = "Runs integration tests."
+    group = "verification"
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    shouldRunAfter test
+    useJUnitPlatform()
+}
+
+check.dependsOn integrationTest

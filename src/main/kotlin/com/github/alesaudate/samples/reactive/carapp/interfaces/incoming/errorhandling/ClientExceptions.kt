@@ -2,7 +2,6 @@ package com.github.alesaudate.samples.reactive.carapp.interfaces.incoming.errorh
 
 import java.lang.RuntimeException
 
-
 abstract class ClientException() : RuntimeException()
 
 data class EntityNotFoundException(val code: String) : ClientException() {

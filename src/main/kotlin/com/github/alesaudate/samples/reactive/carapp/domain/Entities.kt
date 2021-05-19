@@ -7,7 +7,13 @@ import com.github.alesaudate.samples.reactive.carapp.extensions.ISO_LOCAL_DATE_P
 import org.springframework.data.annotation.Immutable
 import java.time.LocalDate
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.ManyToOne
 import javax.validation.constraints.Size
 
 @Entity
@@ -43,7 +49,6 @@ data class TravelRequest(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-
 
     @ManyToOne
     val passenger: Passenger,

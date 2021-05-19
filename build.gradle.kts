@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+
 plugins {
 	id("org.springframework.boot") version "2.4.5"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
@@ -9,9 +10,15 @@ plugins {
 	kotlin("plugin.allopen") version "1.4.32"
 }
 
+apply(from = "gradle/integrationTest.gradle")
+apply(from = "gradle/coverage.gradle")
+apply(from = "gradle/lint.gradle")
+
 group = "com.github.alesaudate.samples.reactive"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
+
+
 
 repositories {
 	mavenCentral()
@@ -39,6 +46,7 @@ dependencies {
 
 	runtimeOnly("mysql:mysql-connector-java")
 
+
 	testImplementation("com.github.javafaker:javafaker:1.0.2")
 	testImplementation("com.ninja-squad:springmockk:3.0.1")
 	testImplementation("io.projectreactor:reactor-test")
@@ -46,7 +54,8 @@ dependencies {
 		exclude(module = "junit-vintage-engine")
 		exclude(module = "mockito-core")
 	}
-	testImplementation ("org.testcontainers:testcontainers:$testContainersVersion")
+	testImplementation("org.awaitility:awaitility-kotlin:4.1.0")
+	testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
 }
 
 tasks.withType<KotlinCompile> {

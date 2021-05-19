@@ -8,13 +8,13 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
 
-abstract class EntityService<T, ID>(
-    val repository: JpaRepository<T, ID>
+abstract class EntityService<T : Any, ID : Any>(
+    private val repository: JpaRepository<T, ID>
 ) {
 
     private val scheduler = Schedulers.boundedElastic()
 
-    fun findById(id: ID) : Mono<T> {
+    fun findById(id: ID): Mono<T> {
         return Mono.fromCallable {
             repository.findByIdOrNull(id)
         }
@@ -22,12 +22,12 @@ abstract class EntityService<T, ID>(
             .subscribeOn(scheduler)
     }
 
-    fun findAll(pageable: Pageable = Pageable.unpaged()) : Flux<T> {
+    fun findAll(pageable: Pageable = Pageable.unpaged()): Flux<T> {
         return Flux.fromStream { repository.findAll(pageable).get() }
             .subscribeOn(scheduler)
     }
 
-    fun save (entity: T) : Mono<T> {
+    fun save(entity: T): Mono<T> {
         return Mono.fromCallable {
             repository.save(entity)
         }.subscribeOn(scheduler)
@@ -39,14 +39,12 @@ abstract class EntityService<T, ID>(
     }
 }
 
-
 @Service
 class PassengerService(
-    val passengerRepository: PassengerRepository
+    passengerRepository: PassengerRepository
 ) : EntityService<Passenger, Long> (passengerRepository)
-
 
 @Service
 class DriverService(
-    val driverRepository: DriverRepository
+    driverRepository: DriverRepository
 ) : EntityService<Driver, Long> (driverRepository)

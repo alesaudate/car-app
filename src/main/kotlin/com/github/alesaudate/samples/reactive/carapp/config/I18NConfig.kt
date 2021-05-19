@@ -9,7 +9,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.web.reactive.config.DelegatingWebFluxConfiguration
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.i18n.AcceptHeaderLocaleContextResolver
-import java.util.*
+import java.util.Locale
 
 @Configuration
 class I18NConfig(
@@ -24,7 +24,6 @@ class I18NConfig(
 
     override fun createLocaleContextResolver() = LocaleResolver(LocaleUtils.toLocale(defaultLocale))
 }
-
 
 class LocaleResolver(
     val defaultLocaleToResolve: Locale

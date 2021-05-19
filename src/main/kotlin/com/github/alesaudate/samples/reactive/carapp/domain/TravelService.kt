@@ -2,7 +2,6 @@ package com.github.alesaudate.samples.reactive.carapp.domain
 
 import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import com.github.alesaudate.samples.reactive.carapp.extensions.info
-import com.github.alesaudate.samples.reactive.carapp.extensions.warn
 import com.github.alesaudate.samples.reactive.carapp.interfaces.outcoming.GmapsService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
@@ -25,7 +24,6 @@ class TravelService(
 
     private val scheduler = Schedulers.boundedElastic()
 
-
     @PostConstruct
     fun init() {
         expireOldTravelRequests()
@@ -37,15 +35,13 @@ class TravelService(
         }.subscribeOn(scheduler)
     }
 
-
-    fun listByNearbyTravelRequests(currentAddress: String): Flux<TravelRequest> {
+    fun findNearbyTravelRequests(currentAddress: String): Flux<TravelRequest> {
 
         return findCreatedTravelRequests()
             .flatMap { tr -> gmapsService.getDistanceBetweenAddresses(currentAddress, tr.origin).map { tr to it } }
             .filter { it.second <= maxTravelTime }
             .map { it.first }
     }
-
 
     @Scheduled(cron = "*/30 * * * * *")
     fun expireOldTravelRequests() {
@@ -57,9 +53,9 @@ class TravelService(
                 info("About to expire travel request {}", it)
                 val tr = it.copy(status = TravelRequestStatus.EXPIRED)
                 travelRequestRepository.save(tr)
+                info("Expired travel request {}", tr)
             }
     }
-
 
     private fun findCreatedTravelRequests(): Flux<TravelRequest> {
         return Flux.fromIterable(travelRequestRepository.findByStatus(TravelRequestStatus.CREATED))
