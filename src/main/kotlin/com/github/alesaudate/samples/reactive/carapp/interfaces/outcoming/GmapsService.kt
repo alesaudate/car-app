@@ -1,5 +1,6 @@
 package com.github.alesaudate.samples.reactive.carapp.interfaces.outcoming
 
+import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import com.github.alesaudate.samples.reactive.carapp.extensions.warn
 import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
@@ -55,7 +56,9 @@ class GmapsService(
         try {
             val errorMessage = documentContext.read<String>("\$.error_message")
             errorMessage.let { throw GMapsException(it) }
-        } catch (e: PathNotFoundException) {}
+        } catch (e: PathNotFoundException) {
+            debug("No errors have been found in {}", documentContext)
+        }
     }
 
     private fun findDuration(documentContext: DocumentContext): Int {

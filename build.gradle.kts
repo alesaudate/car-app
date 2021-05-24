@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.springframework.boot") version "2.4.5"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	id("name.remal.sonarlint") version "1.3.0"
 	kotlin("jvm") version "1.4.32"
 	kotlin("plugin.spring") version "1.4.32"
 	kotlin("plugin.noarg") version "1.4.32"
@@ -13,6 +14,7 @@ plugins {
 apply(from = "gradle/integrationTest.gradle")
 apply(from = "gradle/coverage.gradle")
 apply(from = "gradle/lint.gradle")
+apply(from = "gradle/sonar.gradle")
 
 group = "com.github.alesaudate.samples.reactive"
 version = "0.0.1-SNAPSHOT"

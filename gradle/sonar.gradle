@@ -1,0 +1,3 @@
+check.dependsOn sonarlintMain
+check.dependsOn sonarlintTest
+check.dependsOn sonarlintIntegrationTest
