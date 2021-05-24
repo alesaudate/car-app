@@ -27,8 +27,8 @@ class ClientErrorHandling(
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleEntityNotFound(ex: EntityNotFoundException, locale: Locale) = ErrorResponse(listOf(getMessage(ex.resolveCode(), locale)))
 
-    fun getMessage(code: String, locale: Locale) = ErrorData(messageSource.getMessage(code, null, locale))
+    private fun getMessage(code: String, locale: Locale) = ErrorData(messageSource.getMessage(code, null, locale))
 
-    fun getMessage(fieldError: FieldError, locale: Locale) =
+    private fun getMessage(fieldError: FieldError, locale: Locale) =
         ErrorData(messageSource.getMessage(fieldError, locale))
 }

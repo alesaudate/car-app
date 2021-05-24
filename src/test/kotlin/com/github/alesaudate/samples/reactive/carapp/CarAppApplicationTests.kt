@@ -23,11 +23,6 @@ class CarAppApplicationTests {
             container.waitingFor("mysql_1", HostPortWaitStrategy())
             container.start()
         }
-
-        @AfterAll
-        fun destroy() {
-            container.stop()
-        }
     }
 
     @Test

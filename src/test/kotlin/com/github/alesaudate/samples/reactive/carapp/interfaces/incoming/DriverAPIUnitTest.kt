@@ -9,6 +9,7 @@ import com.github.alesaudate.samples.reactive.carapp.randomName
 import com.github.alesaudate.samples.reactive.carapp.randomPositiveInt
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -82,5 +83,33 @@ class DriverAPIUnitTest {
         every { driverService.findById(driver.id!!) } returns Mono.empty()
 
         assertThrows<EntityNotFoundException> { driverAPI.fullUpdate(driver.id!!, driver).block() }
+    }
+
+    @Test
+    fun `given that I have a registered driver, when I request to update incrementally this driver, then he should be updated`() {
+
+        val driver = randomDriver()
+        val id = driver.id!!
+        val patchDriver = PatchDriver(name = randomName(), birthDate = null)
+
+        every { driverService.findById(driver.id!!) } returns Mono.just(driver)
+        every { driverService.save(driver.copy(name = patchDriver.name!!)) } returns Mono.just(driver.copy(name = patchDriver.name!!))
+
+        val updatedDriver = driverAPI.incrementalUpdate(id, patchDriver).block()
+
+        assertEquals(driver.birthDate, updatedDriver!!.birthDate)
+        assertEquals(patchDriver.name, updatedDriver.name)
+    }
+
+    @Test
+    fun `given that I have a registered driver, when I request to delete this driver, then he should be deleted`() {
+
+        val driver = randomDriver()
+
+        every { driverService.findById(driver.id!!) } returns Mono.just(driver)
+        every { driverService.delete(driver) } returns Mono.empty()
+
+        driverAPI.deleteEntity(driver.id!!).block()
+        verify { driverService.delete(driver) }
     }
 }

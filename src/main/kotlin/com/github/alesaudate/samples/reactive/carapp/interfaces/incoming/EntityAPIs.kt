@@ -49,14 +49,14 @@ abstract class EntityAPI<T : Any, ID : Any, P : Any>(
     }
 
     @PatchMapping("/{id}")
-    fun incrementalUpdatePassenger(@PathVariable("id") id: ID, @RequestBody @Valid patchEntity: P): Mono<T> {
+    fun incrementalUpdate(@PathVariable("id") id: ID, @RequestBody @Valid patchEntity: P): Mono<T> {
         return findSingle(id)
             .map { it absorbFrom patchEntity }
             .flatMap { entityService.save(it) }
     }
 
     @DeleteMapping("/{id}")
-    fun deletePassenger(@PathVariable("id") id: ID) = findSingle(id).flatMap { entityService.delete(it) }
+    fun deleteEntity(@PathVariable("id") id: ID) = findSingle(id).flatMap { entityService.delete(it) }
 
     abstract fun entityNotFoundException(): EntityNotFoundException
 

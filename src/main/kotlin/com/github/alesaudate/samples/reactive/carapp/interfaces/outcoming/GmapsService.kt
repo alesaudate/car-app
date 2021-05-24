@@ -3,6 +3,7 @@ package com.github.alesaudate.samples.reactive.carapp.interfaces.outcoming
 import com.github.alesaudate.samples.reactive.carapp.extensions.warn
 import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
+import com.jayway.jsonpath.PathNotFoundException
 import net.minidev.json.JSONArray
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -20,12 +21,12 @@ class GmapsService(
     val gMapsHost: String,
 
     @Qualifier("GMaps")
-    val webClientBuider: WebClient.Builder
+    val webClientBuilder: WebClient.Builder
 ) {
 
     fun getDistanceBetweenAddresses(addressOne: String, addressTwo: String): Mono<Int> {
 
-        return webClientBuider.baseUrl(gMapsHost)
+        return webClientBuilder.baseUrl(gMapsHost)
             .build()
             .get()
             .uri { uriBuilder ->
@@ -41,8 +42,8 @@ class GmapsService(
             .map { asDocumentContext(it!!) }
             .doOnNext { detectError(it) }
             .map { findDuration(it!!) }
-            .onErrorContinue {
-                throwable, _ ->
+            .doOnError {
+                throwable ->
                 warn("Google Maps could not fetch data for distance between $addressOne and $addressTwo", throwable)
             }
     }
@@ -51,8 +52,10 @@ class GmapsService(
 
     private fun detectError(documentContext: DocumentContext) {
 
-        val errorMessage = documentContext.read<String?>("\$.error_message")
-        errorMessage?.let { throw GMapsException(it) }
+        try {
+            val errorMessage = documentContext.read<String>("\$.error_message")
+            errorMessage.let { throw GMapsException(it) }
+        } catch (e: PathNotFoundException) {}
     }
 
     private fun findDuration(documentContext: DocumentContext): Int {

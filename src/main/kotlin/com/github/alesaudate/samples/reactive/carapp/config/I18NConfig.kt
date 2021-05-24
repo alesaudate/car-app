@@ -34,7 +34,7 @@ class LocaleResolver(
     }
 
     override fun resolveLocaleContext(exchange: ServerWebExchange): LocaleContext {
-        val acceptLanguageHeader = exchange.request.headers["Accept-Language"]?.firstOrNull()
+        val acceptLanguageHeader = exchange.request.headers["Accept-Language"]?.firstOrNull()?.trim()
         if (acceptLanguageHeader.isNullOrEmpty() || acceptLanguageHeader.trim() == "*") {
             return LocaleContext { defaultLocaleToResolve }
         }

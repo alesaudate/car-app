@@ -1,0 +1,21 @@
+{
+  "geocoded_waypoints": [
+    {
+      "geocoder_status": "OK",
+      "place_id": "ChIJMeS8kr1ZzpQRC-8GOBPtfcM",
+      "types": [
+        "street_address"
+      ]
+    },
+    {
+      "geocoder_status": "OK",
+      "place_id": "ChIJf-oLy0TRuYcR7__6SfJ4B1s",
+      "types": [
+        "establishment",
+        "natural_feature"
+      ]
+    }
+  ],
+  "routes": [],
+  "status": "ZERO_RESULTS"
+}

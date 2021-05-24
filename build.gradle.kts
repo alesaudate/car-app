@@ -33,6 +33,7 @@ dependencies {
 	implementation("com.jayway.jsonpath:json-path")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+	implementation("org.apache.commons:commons-text:1.9")
 	implementation("org.jetbrains.kotlin:kotlin-noarg")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -50,10 +51,12 @@ dependencies {
 	testImplementation("com.github.javafaker:javafaker:1.0.2")
 	testImplementation("com.ninja-squad:springmockk:3.0.1")
 	testImplementation("io.projectreactor:reactor-test")
+	testImplementation("io.rest-assured:spring-mock-mvc:4.3.2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(module = "junit-vintage-engine")
 		exclude(module = "mockito-core")
 	}
+	testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:2.2.5.RELEASE")
 	testImplementation("org.awaitility:awaitility-kotlin:4.1.0")
 	testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
 }
