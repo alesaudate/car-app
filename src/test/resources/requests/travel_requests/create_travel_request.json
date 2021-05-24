@@ -1,0 +1,5 @@
+{
+  "passenger_id": ${passengerId},
+  "origin": "${origin}",
+  "destination": "${destination}"
+}

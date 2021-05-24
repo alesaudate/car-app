@@ -8,5 +8,5 @@ app:
   interfaces:
     outcoming:
       gmaps:
-        host: http://localhost:8080
+        host: http://localhost:${wiremock.server.port:8080}
         appKey: 123

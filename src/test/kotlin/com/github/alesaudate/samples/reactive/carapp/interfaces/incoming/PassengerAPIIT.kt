@@ -1,5 +1,6 @@
 package com.github.alesaudate.samples.reactive.carapp.interfaces.incoming
 
+import com.github.alesaudate.samples.reactive.carapp.extensions.TestContainersExtension
 import com.github.alesaudate.samples.reactive.carapp.extensions.loadFileContents
 import com.github.alesaudate.samples.reactive.carapp.randomName
 import io.restassured.RestAssured
@@ -7,35 +8,20 @@ import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.test.context.ActiveProfiles
-import org.testcontainers.containers.DockerComposeContainer
-import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
-import java.io.File
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
+@ExtendWith(TestContainersExtension::class)
 class PassengerAPIIT {
 
     @LocalServerPort
     private var port: Int = 0
-
-    companion object {
-        private val container = DockerComposeContainer<Nothing>(File("docker/docker-compose.yml"))
-
-        @BeforeAll
-        @JvmStatic
-        fun init() {
-            container.withExposedService("mysql_1", 3306)
-            container.waitingFor("mysql_1", HostPortWaitStrategy())
-            container.start()
-        }
-    }
 
     @BeforeEach
     fun setup() {
@@ -108,7 +94,6 @@ class PassengerAPIIT {
             .get("/passengers/$id")
             .then()
             .statusCode(404)
-
     }
 
     fun createPassenger(passengerName: String): Long {
@@ -124,6 +109,4 @@ class PassengerAPIIT {
             .body()
             .jsonPath().getLong("id")
     }
-
-
 }

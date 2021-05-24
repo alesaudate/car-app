@@ -1,0 +1,4 @@
+{
+  "name": "${name}",
+  "birth_date": "${birthDate}"
+}
