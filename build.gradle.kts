@@ -1,11 +1,13 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import info.solidsoft.gradle.pitest.PitestTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 
 plugins {
-	id("org.springframework.boot") version "2.4.5"
+	id("info.solidsoft.pitest") version "1.5.1"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	id("name.remal.sonarlint") version "1.3.0"
-	id("info.solidsoft.pitest") version "1.5.1"
+	id("org.owasp.dependencycheck") version "6.1.6"
+	id("org.springframework.boot") version "2.4.5"
 	kotlin("jvm") version "1.4.32"
 	kotlin("plugin.spring") version "1.4.32"
 	kotlin("plugin.noarg") version "1.4.32"
@@ -91,6 +93,17 @@ tasks.withType<PitestTask> {
 	historyOutputLocation.set(file("$buildDir/pitest/pitest.history"))
 }
 
+dependencyCheck {
+	analyzers(closureOf<org.owasp.dependencycheck.gradle.extension.AnalyzerExtension> {
+		nodeEnabled = false
+		assemblyEnabled = false
+		nodeAuditEnabled = false
+		nodeAudit(closureOf<org.owasp.dependencycheck.gradle.extension.NodeAuditExtension> {
+			yarnEnabled = false
+		})
+	})
+}
+
 allOpen {
 	annotation("javax.persistence.Entity")
 }
@@ -101,4 +114,6 @@ noArg {
 
 tasks.check {
 	dependsOn("pitest")
+	dependsOn("dependencyCheckAnalyze")
 }
+
