@@ -4,6 +4,7 @@ import com.github.alesaudate.samples.reactive.carapp.extensions.ISO_LOCAL_DATE_P
 import com.github.alesaudate.samples.reactive.carapp.extensions.TestContainersExtension
 import com.github.alesaudate.samples.reactive.carapp.extensions.loadFileContents
 import com.github.alesaudate.samples.reactive.carapp.randomDateInThePast
+import com.github.alesaudate.samples.reactive.carapp.randomId
 import com.github.alesaudate.samples.reactive.carapp.randomName
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
@@ -51,6 +52,33 @@ class DriverAPIIT {
             .body("id", notNullValue())
             .body("name", equalTo(driverName))
             .body("birth_date", equalTo(formatDate(birthDate)))
+    }
+
+    @Test
+    fun `test find driver that does not exist`() {
+
+        val id = randomId()
+
+        given()
+            .contentType(ContentType.JSON)
+            .get("/drivers/$id")
+            .then()
+            .statusCode(404)
+            .body("errors[0].message", equalTo("Driver has not been found"))
+    }
+
+    @Test
+    fun `test find driver that does not exist with locale pt-BR`() {
+
+        val id = randomId()
+
+        given()
+            .contentType(ContentType.JSON)
+            .header("Accept-Language", "pt-BR")
+            .get("/drivers/$id")
+            .then()
+            .statusCode(404)
+            .body("errors[0].message", equalTo("Motorista não encontrado"))
     }
 
     @Test
