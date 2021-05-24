@@ -1,10 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
+import info.solidsoft.gradle.pitest.PitestTask
 
 plugins {
 	id("org.springframework.boot") version "2.4.5"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	id("name.remal.sonarlint") version "1.3.0"
+	id("info.solidsoft.pitest") version "1.5.1"
 	kotlin("jvm") version "1.4.32"
 	kotlin("plugin.spring") version "1.4.32"
 	kotlin("plugin.noarg") version "1.4.32"
@@ -52,8 +53,10 @@ dependencies {
 
 	testImplementation("com.github.javafaker:javafaker:1.0.2")
 	testImplementation("com.ninja-squad:springmockk:3.0.1")
+	testImplementation("info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("io.rest-assured:spring-mock-mvc:4.3.2")
+	testImplementation("org.pitest:pitest-junit5-plugin:0.12")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(module = "junit-vintage-engine")
 		exclude(module = "mockito-core")
@@ -61,6 +64,7 @@ dependencies {
 	testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:2.2.5.RELEASE")
 	testImplementation("org.awaitility:awaitility-kotlin:4.1.0")
 	testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
+
 }
 
 tasks.withType<KotlinCompile> {
@@ -74,10 +78,27 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
+tasks.withType<PitestTask> {
+	testPlugin.set("junit5")
+	excludedTestClasses.set(setOf("**IT"))
+	threads.set(8)
+	timestampedReports.set(false)
+	outputFormats.set(setOf("HTML"))
+	reportDir.set(file("$buildDir/reports/pitest"))
+	mutators.set(setOf("STRONGER", "DEFAULTS"))
+	avoidCallsTo.set(setOf("kotlin.jvm.internal", "kotlinx.coroutines", "org.slf4j"))
+	historyInputLocation.set(file("$buildDir/pitest/pitest.history"))
+	historyOutputLocation.set(file("$buildDir/pitest/pitest.history"))
+}
+
 allOpen {
 	annotation("javax.persistence.Entity")
 }
 
 noArg {
 	annotation("javax.persistence.Entity")
+}
+
+tasks.check {
+	dependsOn("pitest")
 }
