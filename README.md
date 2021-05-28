@@ -40,6 +40,6 @@ It also has several mutation tests in place, running through a [PiTest plugin](h
 
 ## How to run it
 
-There's a docker-compose file inside the `docker` folder. Just do a `docker-compose up -d` command in this folder and, once it is up, `./gradlew bootRun --args="app.interfaces.outcoming.gmaps.appKey=<YOUR GOOGLE API KEY>"`. 
+There's a docker-compose file inside the `docker` folder. Just do a `docker-compose up -d` command in this folder and, once it is up, `./gradlew bootRun --args="--app.interfaces.outcoming.gmaps.appKey=<YOUR API KEY>"`. 
 
 Then, there's a Postman file on the root, which is completely documented and should be a good guide on how to use the system.
