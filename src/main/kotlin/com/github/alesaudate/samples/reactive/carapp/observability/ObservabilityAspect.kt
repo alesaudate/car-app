@@ -1,11 +1,12 @@
 package com.github.alesaudate.samples.reactive.carapp.observability
 
-import io.micrometer.core.instrument.MeterRegistry
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
+import org.reactivestreams.Publisher
 import org.springframework.stereotype.Component
+import reactor.kotlin.core.publisher.toFlux
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
@@ -19,9 +20,8 @@ class ObservabilityAspect(
     val metricsRegistry: MetricsDataProvider
 ) {
 
-
     @Around("@annotation(com.github.alesaudate.samples.reactive.carapp.observability.Observed)")
-    fun trackExecutionTime(joinPoint: ProceedingJoinPoint): Any? {
+    fun interceptObserved(joinPoint: ProceedingJoinPoint): Any? {
 
         val metricsName = getMetricsName(joinPoint)
         val methodName = getMethodName(joinPoint)
@@ -30,14 +30,20 @@ class ObservabilityAspect(
 
         try {
             val result = joinPoint.proceed()
-            metricsRegistry.registerSuccessServiceCall(metricsName, methodName)
+            if (result is Publisher<*>) {
+                result.toFlux().shareNext().subscribe({
+                    metricsRegistry.registerSuccessServiceCall(metricsName, methodName)
+                }, {
+                    metricsRegistry.registerFailureServiceCall(metricsName, methodName)
+                })
+            } else {
+                metricsRegistry.registerSuccessServiceCall(metricsName, methodName)
+            }
             return result
-        }
-        catch (ex: Exception) {
+        } catch (ex: Exception) {
             metricsRegistry.registerFailureServiceCall(metricsName, methodName)
             throw ex
         }
-
     }
 
     private fun getMethodName(joinPoint: ProceedingJoinPoint) = getMethodSignature(joinPoint).name
@@ -50,5 +56,4 @@ class ObservabilityAspect(
     }
 
     private fun getMethodSignature(joinPoint: ProceedingJoinPoint) = joinPoint.signature as MethodSignature
-
 }
