@@ -2,6 +2,7 @@ package com.github.alesaudate.samples.reactive.carapp.interfaces.outcoming
 
 import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import com.github.alesaudate.samples.reactive.carapp.extensions.warn
+import com.github.alesaudate.samples.reactive.carapp.observability.Observed
 import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
 import com.jayway.jsonpath.PathNotFoundException
@@ -25,6 +26,7 @@ class GmapsService(
     val webClientBuilder: WebClient.Builder
 ) {
 
+    @Observed("gmapsClient")
     fun getDistanceBetweenAddresses(addressOne: String, addressTwo: String): Mono<Int> {
 
         return webClientBuilder.baseUrl(gMapsHost)

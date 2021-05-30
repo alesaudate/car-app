@@ -37,6 +37,7 @@ dependencies {
 
 	implementation("com.jayway.jsonpath:json-path")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("io.micrometer:micrometer-core")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	implementation("org.apache.commons:commons-text:1.9")
 	implementation("org.jetbrains.kotlin:kotlin-noarg")
@@ -44,6 +45,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.liquibase:liquibase-core:$liquibaseVersion") // The managed version has issues with dates: https://stackoverflow.com/questions/66787654/class-java-time-localdatetime-cannot-be-cast-to-class-java-lang-string
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-aop")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -110,6 +113,13 @@ allOpen {
 
 noArg {
 	annotation("javax.persistence.Entity")
+}
+
+tasks.bootRun {
+	if (project.hasProperty("args")) {
+		val projectArgs = project.properties["args"] as String
+		args(projectArgs.split(','))
+	}
 }
 
 tasks.check {

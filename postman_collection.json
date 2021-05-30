@@ -564,6 +564,95 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Metrics",
+			"item": [
+				{
+					"name": "Get Google Maps Hit Count",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/admin/metrics/google/maps/distance/count/hits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"metrics",
+								"google",
+								"maps",
+								"distance",
+								"count",
+								"hits"
+							]
+						},
+						"description": "Returns how many times the getDistanceBetweenAddresses has been called (and thus, how many times the Google Maps API has been called)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Google Maps Success Count",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/admin/metrics/google/maps/distance/count/successes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"metrics",
+								"google",
+								"maps",
+								"distance",
+								"count",
+								"successes"
+							]
+						},
+						"description": "Returns how many times the getDistanceBetweenAddresses has been called and returned successfully"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Google Maps Failure Count",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/admin/metrics/google/maps/distance/count/failures",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"metrics",
+								"google",
+								"maps",
+								"distance",
+								"count",
+								"failures"
+							]
+						},
+						"description": "Returns how many times the getDistanceBetweenAddresses has been called and returned some exception"
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
