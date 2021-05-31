@@ -26,7 +26,7 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("integration-test")
 @ExtendWith(TestContainersExtension::class)
 @AutoConfigureWireMock(port = Options.DYNAMIC_PORT)
-@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MetricsAPIIT {
 
     @Autowired

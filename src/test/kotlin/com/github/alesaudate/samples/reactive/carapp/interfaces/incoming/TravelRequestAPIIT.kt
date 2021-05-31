@@ -54,7 +54,7 @@ class TravelRequestAPIIT {
     }
 
     @Test
-    @DirtiesContext
+    @DirtiesContext()
     fun `test find close travel requests`() {
 
         val travelOrigin = randomAddress()
