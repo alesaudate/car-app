@@ -23,7 +23,6 @@ class MetricsAPI(
     fun googleMapsCallsFailures() = CountResponse(metricsDataProvider.getGoogleMapsClientFailureAmount())
 }
 
-
 data class CountResponse(
     val value: Double
 )

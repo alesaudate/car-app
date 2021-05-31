@@ -31,11 +31,14 @@ class ObservabilityAspect(
         try {
             val result = joinPoint.proceed()
             if (result is Publisher<*>) {
-                result.toFlux().shareNext().subscribe({
-                    metricsRegistry.registerSuccessServiceCall(metricsName, methodName)
-                }, {
-                    metricsRegistry.registerFailureServiceCall(metricsName, methodName)
-                })
+                result.toFlux().shareNext().subscribe(
+                    {
+                        metricsRegistry.registerSuccessServiceCall(metricsName, methodName)
+                    },
+                    {
+                        metricsRegistry.registerFailureServiceCall(metricsName, methodName)
+                    }
+                )
             } else {
                 metricsRegistry.registerSuccessServiceCall(metricsName, methodName)
             }

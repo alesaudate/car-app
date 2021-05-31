@@ -8,13 +8,13 @@ class MetricsDataProvider(
     val metricsRegistry: MeterRegistry
 ) {
 
-    fun registerServiceCall(serviceName: String, methodName: String) = metricsRegistry.counter("$serviceName.$methodName.calls").increment()
+    fun registerServiceCall(serviceName: String, methodName: String) = metricsRegistry.counter("$serviceName.$methodName.call").increment()
 
     fun registerSuccessServiceCall(serviceName: String, methodName: String) = metricsRegistry.counter("$serviceName.$methodName.calls.successes").increment()
 
     fun registerFailureServiceCall(serviceName: String, methodName: String) = metricsRegistry.counter("$serviceName.$methodName.calls.failures").increment()
 
-    fun getGoogleMapsClientHitAmount() = metricsRegistry.counter("gmapsClient.getDistanceBetweenAddresses.calls").count()
+    fun getGoogleMapsClientHitAmount() = metricsRegistry.counter("gmapsClient.getDistanceBetweenAddresses.call").count()
 
     fun getGoogleMapsClientSuccessAmount() = metricsRegistry.counter("gmapsClient.getDistanceBetweenAddresses.calls.successes").count()
 
