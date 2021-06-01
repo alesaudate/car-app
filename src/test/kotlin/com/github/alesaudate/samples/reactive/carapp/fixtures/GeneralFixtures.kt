@@ -26,6 +26,10 @@ fun randomMessage() = FAKER.backToTheFuture().quote()
 
 fun randomCode(size: Int = 20) = FAKER.regexify("[a-zA-Z0-9]{$size}")
 
+fun randomServiceName() = FAKER.company().buzzword()
+
+fun randomDouble(from: Double = 0.0, until: Double = 1000000.0) = Random.nextDouble(from, until)
+
 inline fun <T : Any> listOfData(size: Int, lmbd: () -> T): List<T> {
 
     val dataList = mutableListOf<T>()

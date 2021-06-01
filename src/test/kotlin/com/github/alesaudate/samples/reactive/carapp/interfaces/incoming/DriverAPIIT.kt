@@ -3,6 +3,7 @@ package com.github.alesaudate.samples.reactive.carapp.interfaces.incoming
 import com.github.alesaudate.samples.reactive.carapp.extensions.ISO_LOCAL_DATE_PATTERN
 import com.github.alesaudate.samples.reactive.carapp.extensions.TestContainersExtension
 import com.github.alesaudate.samples.reactive.carapp.extensions.loadFileContents
+import com.github.alesaudate.samples.reactive.carapp.extensions.toIsoDate
 import com.github.alesaudate.samples.reactive.carapp.randomDateInThePast
 import com.github.alesaudate.samples.reactive.carapp.randomId
 import com.github.alesaudate.samples.reactive.carapp.randomName
@@ -103,7 +104,7 @@ class DriverAPIIT {
     }
 
     @Test
-    fun `test update driver (patch)`() {
+    fun `test update driver name through patch`() {
         val initialDriverName = randomName()
         val updatedDriverName = randomName()
 
@@ -118,6 +119,24 @@ class DriverAPIIT {
             .body("id", notNullValue())
             .body("name", equalTo(updatedDriverName))
             .body("birth_date", notNullValue())
+    }
+
+    @Test
+    fun `test update driver birth date through patch`() {
+        val initialBirthDate = randomDateInThePast()
+        val updatedBirthDate = randomDateInThePast().toIsoDate()
+
+        val id = createDriver(randomName(), initialBirthDate)
+
+        given()
+            .contentType(ContentType.JSON)
+            .body(loadFileContents("/requests/drivers/update_driver_birth_date.json", mapOf("birthDate" to updatedBirthDate)))
+            .patch("/drivers/$id")
+            .then()
+            .statusCode(200)
+            .body("id", notNullValue())
+            .body("birth_date", equalTo(updatedBirthDate))
+            .body("name", notNullValue())
     }
 
     @Test
