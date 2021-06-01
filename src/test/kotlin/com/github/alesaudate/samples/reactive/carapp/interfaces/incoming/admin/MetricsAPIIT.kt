@@ -1,5 +1,6 @@
 package com.github.alesaudate.samples.reactive.carapp.interfaces.incoming.admin
 
+import com.github.alesaudate.samples.reactive.carapp.domain.TravelRequestRepository
 import com.github.alesaudate.samples.reactive.carapp.extensions.TestContainersExtension
 import com.github.alesaudate.samples.reactive.carapp.extensions.loadFileContents
 import com.github.alesaudate.samples.reactive.carapp.randomAddress
@@ -7,6 +8,7 @@ import com.github.alesaudate.samples.reactive.carapp.randomName
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.Options
+import io.micrometer.core.instrument.MeterRegistry
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
@@ -19,18 +21,22 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
-import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
 @ExtendWith(TestContainersExtension::class)
 @AutoConfigureWireMock(port = Options.DYNAMIC_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MetricsAPIIT {
 
     @Autowired
     private lateinit var wiremock: WireMockServer
+
+    @Autowired
+    private lateinit var meterRegistry: MeterRegistry
+
+    @Autowired
+    private lateinit var travelRequestRepository: TravelRequestRepository
 
     @LocalServerPort
     private var port: Int = 0
@@ -38,6 +44,12 @@ class MetricsAPIIT {
     @BeforeEach
     fun setup() {
         RestAssured.baseURI = "http://localhost:$port"
+        cleanupExecutionData()
+    }
+
+    private fun cleanupExecutionData() {
+        meterRegistry.clear()
+        travelRequestRepository.deleteAll()
     }
 
     private fun createResponseForOriginAndDestination(origin: String, destination: String, file: String = "responses/gmaps/ok_response_5_minutes.json", statusCode: Int = 200) {

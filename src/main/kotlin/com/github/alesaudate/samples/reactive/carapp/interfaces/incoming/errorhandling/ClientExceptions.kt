@@ -4,6 +4,6 @@ import java.lang.RuntimeException
 
 abstract class ClientException() : RuntimeException()
 
-data class EntityNotFoundException(val code: String) : ClientException() {
+data class EntityNotFoundException(private val code: String) : ClientException() {
     fun resolveCode() = "NotFound.$code"
 }
