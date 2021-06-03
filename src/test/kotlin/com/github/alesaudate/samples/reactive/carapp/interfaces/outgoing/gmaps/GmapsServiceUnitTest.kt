@@ -1,5 +1,7 @@
-package com.github.alesaudate.samples.reactive.carapp.interfaces.outcoming
+package com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing
 
+import com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing.gmaps.GMapsException
+import com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing.gmaps.GmapsService
 import com.github.alesaudate.samples.reactive.carapp.randomAddress
 import io.mockk.every
 import io.mockk.mockk

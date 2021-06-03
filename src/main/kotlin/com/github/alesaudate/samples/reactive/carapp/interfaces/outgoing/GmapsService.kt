@@ -1,4 +1,4 @@
-package com.github.alesaudate.samples.reactive.carapp.interfaces.outcoming
+package com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing.gmaps
 
 import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import com.github.alesaudate.samples.reactive.carapp.extensions.warn
