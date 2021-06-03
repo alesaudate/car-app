@@ -86,6 +86,8 @@ tasks.withType<Test> {
 
 tasks.withType<PitestTask> {
 	testPlugin.set("junit5")
+	excludedClasses.set(setOf("*.config.*"))
+	mutationThreshold.set(82)
 	excludedTestClasses.set(setOf("**IT"))
 	threads.set(8)
 	timestampedReports.set(false)
