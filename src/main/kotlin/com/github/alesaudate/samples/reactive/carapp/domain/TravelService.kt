@@ -2,7 +2,7 @@ package com.github.alesaudate.samples.reactive.carapp.domain
 
 import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import com.github.alesaudate.samples.reactive.carapp.extensions.info
-import com.github.alesaudate.samples.reactive.carapp.interfaces.outcoming.GmapsService
+import com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing.gmaps.GmapsService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service

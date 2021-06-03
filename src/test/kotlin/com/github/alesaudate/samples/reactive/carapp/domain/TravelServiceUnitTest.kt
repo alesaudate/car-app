@@ -1,7 +1,7 @@
 package com.github.alesaudate.samples.reactive.carapp.domain
 
 import com.github.alesaudate.samples.reactive.carapp.fixtures.randomTravelRequest
-import com.github.alesaudate.samples.reactive.carapp.interfaces.outcoming.GmapsService
+import com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing.gmaps.GmapsService
 import com.github.alesaudate.samples.reactive.carapp.randomAddress
 import com.github.alesaudate.samples.reactive.carapp.randomId
 import com.ninjasquad.springmockk.MockkBean

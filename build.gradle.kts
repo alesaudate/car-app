@@ -58,6 +58,7 @@ dependencies {
 
 	testImplementation("com.github.javafaker:javafaker:1.0.2")
 	testImplementation("com.ninja-squad:springmockk:3.0.1")
+	testImplementation("com.tngtech.archunit:archunit:0.19.0")
 	testImplementation("info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("io.rest-assured:spring-mock-mvc:4.3.2")
@@ -92,8 +93,8 @@ tasks.withType<PitestTask> {
 	reportDir.set(file("$buildDir/reports/pitest"))
 	mutators.set(setOf("STRONGER", "DEFAULTS"))
 	avoidCallsTo.set(setOf("kotlin.jvm.internal", "kotlinx.coroutines", "org.slf4j"))
-	historyInputLocation.set(file("$buildDir/pitest/pitest.history"))
-	historyOutputLocation.set(file("$buildDir/pitest/pitest.history"))
+	historyInputLocation.set(file("$projectDir/pitest/pitest.history"))
+	historyOutputLocation.set(file("$projectDir/pitest/pitest.history"))
 }
 
 dependencyCheck {
