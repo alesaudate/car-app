@@ -35,6 +35,8 @@ internal class ObservabilityAspectUnitTest {
         verify(exactly = 0) { metricsRegistry.registerSuccessServiceCall("testing", "functionThatAlwaysThrowException") }
         verify(exactly = 1) { metricsRegistry.registerFailureServiceCall("testing", "functionThatAlwaysThrowException") }
     }
+
+
 }
 
 @Component
