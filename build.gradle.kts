@@ -55,7 +55,6 @@ dependencies {
 
 	runtimeOnly("mysql:mysql-connector-java")
 
-
 	testImplementation("com.github.javafaker:javafaker:1.0.2")
 	testImplementation("com.ninja-squad:springmockk:3.0.1")
 	testImplementation("com.tngtech.archunit:archunit:0.19.0")
