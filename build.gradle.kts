@@ -32,11 +32,14 @@ repositories {
 val testContainersVersion="1.15.3"
 val liquibaseVersion="4.3.5"
 val springdocVersion="1.5.8"
+val resilience4jVersion="1.7.0"
 
 dependencies {
 
 	implementation("com.jayway.jsonpath:json-path")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("io.github.resilience4j:resilience4j-reactor:$resilience4jVersion")
+	implementation("io.github.resilience4j:resilience4j-spring-boot2:$resilience4jVersion")
 	implementation("io.micrometer:micrometer-core")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	implementation("org.apache.commons:commons-text:1.9")
