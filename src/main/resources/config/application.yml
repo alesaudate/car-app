@@ -5,3 +5,16 @@ spring:
   liquibase:
     change-log: 'classpath:db/changelog/db.changelog-master.xml'
 
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 5
+      waitDurationInOpenState: 10000
+      failureRateThreshold: 5
+      eventConsumerBufferSize: 10
+      registerHealthIndicator: true
+  instances:
+    GMaps:
+      baseConfig: default

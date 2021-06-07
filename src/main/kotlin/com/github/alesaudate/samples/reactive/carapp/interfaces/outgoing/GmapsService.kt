@@ -6,6 +6,7 @@ import com.github.alesaudate.samples.reactive.carapp.observability.Observed
 import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
 import com.jayway.jsonpath.PathNotFoundException
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import net.minidev.json.JSONArray
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -27,9 +28,11 @@ class GmapsService(
 ) {
 
     @Observed("gmapsClient")
+    @CircuitBreaker(name = "GMaps")
     fun getDistanceBetweenAddresses(addressOne: String, addressTwo: String): Mono<Int> {
 
-        return webClientBuilder.baseUrl(gMapsHost)
+        return webClientBuilder
+            .baseUrl(gMapsHost)
             .build()
             .get()
             .uri { uriBuilder ->
