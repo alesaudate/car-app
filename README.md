@@ -40,6 +40,12 @@ It also has several mutation tests in place, running through a [PiTest plugin](h
 
 ## How to run it
 
-There's a docker-compose file inside the `docker` folder. Just do a `docker-compose up -d` command in this folder and, once it is up, `./gradlew bootRun --args="--app.interfaces.outcoming.gmaps.appKey=<YOUR API KEY>"`. 
+Run the script called `start.sh` that is in the root of the project, supplying Google's API Key as parameter (if you don't have one, go to Google Cloud Platform and issue one for yourself). For example, if your API Key is `123`, then you can invoke the script using `./start.sh 123`. Once it's done, the script will automatically boot a docker container with MySQL and the application itself on port 8080. 
 
-Then, there's a Postman file on the root, which is completely documented and should be a good guide on how to use the system. Alternatively, you can also refer to [Swagger](http://localhost:8080/swagger-ui.html).
+Then, there's a Postman file on the root, which is completely documented and should be a good guide on how to use the system. Alternatively, you can also refer to [Swagger](http://localhost:8080/swagger-ui.html). Using Postman, you have to execute three requests in order to verify it's working: 
+
+- Create passenger
+- Create travel request
+- Find nearby travel requests
+
+Don't worry about supplying parameters, as Postman is already setup to provide random data. The only data that is not randomized is the addresses, as I needed to make sure they were close enough (according to Google Maps) to show up in the results. 
