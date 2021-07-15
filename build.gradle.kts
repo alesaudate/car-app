@@ -51,6 +51,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-aop")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.hateoas:spring-hateoas")
@@ -89,7 +90,7 @@ tasks.withType<Test> {
 tasks.withType<PitestTask> {
 	testPlugin.set("junit5")
 	excludedClasses.set(setOf("*.config.*"))
-	mutationThreshold.set(85)
+	mutationThreshold.set(83)
 	excludedTestClasses.set(setOf("**IT"))
 	threads.set(8)
 	timestampedReports.set(false)

@@ -102,6 +102,21 @@ class PassengerAPIUnitTest {
     }
 
     @Test
+    fun `given that I have a registered passenger, when I request to update incrementally this passenger and I provide no data, then he should remain as is`() {
+
+        val passenger = randomPassenger()
+        val id = passenger.id!!
+        val patchPassenger = PatchPassenger(name = null)
+
+        every { passengerService.findById(passenger.id!!) } returns Mono.just(passenger)
+        every { passengerService.save(passenger) } returns Mono.just(passenger.copy())
+
+        val updatedPassenger = passengerAPI.incrementalUpdate(id, patchPassenger).block()
+
+        assertEquals(passenger.name, updatedPassenger!!.name)
+    }
+
+    @Test
     fun `given that I have a registered passenger, when I request to delete this passenger, then he should be deleted`() {
 
         val passenger = randomPassenger()
