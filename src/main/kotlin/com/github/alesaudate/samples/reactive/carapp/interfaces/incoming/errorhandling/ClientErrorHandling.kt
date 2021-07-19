@@ -1,5 +1,6 @@
 package com.github.alesaudate.samples.reactive.carapp.interfaces.incoming.errorhandling
 
+import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import org.springframework.context.MessageSource
 import org.springframework.http.HttpStatus
 import org.springframework.validation.FieldError
@@ -25,7 +26,10 @@ class ClientErrorHandling(
 
     @ExceptionHandler(EntityNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun handleEntityNotFound(ex: EntityNotFoundException, locale: Locale) = ErrorResponse(listOf(getMessage(ex.resolveCode(), locale)))
+    fun handleEntityNotFound(ex: EntityNotFoundException, locale: Locale): ErrorResponse {
+        debug("Entity has not been found", ex)
+        return ErrorResponse(listOf(getMessage(ex.resolveCode(), locale)))
+    }
 
     private fun getMessage(code: String, locale: Locale) = ErrorData(messageSource.getMessage(code, null, locale))
 

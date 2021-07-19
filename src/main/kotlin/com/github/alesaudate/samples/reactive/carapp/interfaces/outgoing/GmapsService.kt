@@ -2,6 +2,7 @@ package com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing
 
 import com.github.alesaudate.samples.reactive.carapp.caching.CacheOperator
 import com.github.alesaudate.samples.reactive.carapp.extensions.debug
+import com.github.alesaudate.samples.reactive.carapp.extensions.trace
 import com.github.alesaudate.samples.reactive.carapp.extensions.warn
 import com.github.alesaudate.samples.reactive.carapp.observability.Observed
 import com.jayway.jsonpath.DocumentContext
@@ -50,6 +51,7 @@ class GmapsService(
                 .toEntity(String::class.java)
                 .mapNotNull { it.body }
                 .map { asDocumentContext(it!!) }
+                .doOnNext { debug("Used Gmaps to retrieve distances.") }
                 .doOnNext { detectError(it) }
                 .map { findDuration(it!!) }
                 .doOnError {
@@ -68,7 +70,7 @@ class GmapsService(
             val errorMessage = documentContext.read<String>("\$.error_message")
             errorMessage.let { throw GMapsException(it) }
         } catch (e: PathNotFoundException) {
-            debug("No errors have been found in {}", documentContext)
+            trace("No errors have been found in {}", documentContext.jsonString())
         }
     }
 

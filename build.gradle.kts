@@ -52,6 +52,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-aop")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+	implementation("org.springframework.boot:spring-boot-starter-log4j2")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.hateoas:spring-hateoas")
@@ -69,11 +70,18 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(module = "junit-vintage-engine")
 		exclude(module = "mockito-core")
+		exclude(module = "spring-boot-starter-logging")
 	}
 	testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:2.2.5.RELEASE")
 	testImplementation("org.awaitility:awaitility-kotlin:4.1.0")
 	testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
 
+}
+
+configurations {
+	all {
+		exclude(group= "org.springframework.boot", module= "spring-boot-starter-logging")
+	}
 }
 
 tasks.withType<KotlinCompile> {

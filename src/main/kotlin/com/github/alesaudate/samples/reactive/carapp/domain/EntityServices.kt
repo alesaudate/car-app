@@ -1,5 +1,6 @@
 package com.github.alesaudate.samples.reactive.carapp.domain
 
+import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -19,6 +20,7 @@ abstract class EntityService<T : Any, ID : Any>(
             repository.findByIdOrNull(id)
         }
             .flatMap { it?.let { Mono.just(it) } ?: Mono.empty() }
+            .doOnNext { debug("Found entity {}", it) }
             .subscribeOn(scheduler)
     }
 
