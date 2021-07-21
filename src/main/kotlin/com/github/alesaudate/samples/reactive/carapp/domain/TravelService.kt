@@ -41,7 +41,7 @@ class TravelService(
     fun findNearbyTravelRequests(currentAddress: String): Flux<TravelRequest> {
 
         return findCreatedTravelRequests()
-            .flatMap { tr -> cache(gmapsService.getDistanceBetweenAddresses(currentAddress, tr.origin), "${tr.origin}-v-${tr.destination}", Duration.ofSeconds(30)).map { tr to it } }
+            .flatMap { tr -> cache(gmapsService.getDistanceBetweenAddresses(currentAddress, tr.origin), "${currentAddress}-v-${tr.origin}", Duration.ofSeconds(30)).map { tr to it } }
             .filter { it.second <= maxTravelTime }
             .map { it.first }
     }

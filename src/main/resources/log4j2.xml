@@ -5,17 +5,15 @@
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT" follow="true">
-            <PatternLayout pattern="${LOG_PATTERN}" />
+            <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
     </Appenders>
     <Loggers>
-
         <Logger name="com.github.alesaudate.samples.reactive.carapp" level="debug" additivity="false">
-            <AppenderRef ref="Console" />
+            <AppenderRef ref="Console"/>
         </Logger>
-
-        <Root level="info">
-            <AppenderRef ref="Console" />
+        <Root level="warn">
+            <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
 </Configuration>
