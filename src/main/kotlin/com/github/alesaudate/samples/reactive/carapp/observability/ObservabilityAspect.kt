@@ -4,9 +4,8 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
-import org.reactivestreams.Publisher
 import org.springframework.stereotype.Component
-import reactor.kotlin.core.publisher.toFlux
+import reactor.core.publisher.Mono
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
@@ -30,22 +29,27 @@ class ObservabilityAspect(
 
         try {
             val result = joinPoint.proceed()
-            if (result is Publisher<*>) {
-                result.toFlux().shareNext().subscribe(
-                    {
-                        metricsRegistry.registerSuccessServiceCall(metricsName, methodName)
-                    },
-                    {
-                        metricsRegistry.registerFailureServiceCall(metricsName, methodName)
-                    }
-                )
-            } else {
-                metricsRegistry.registerSuccessServiceCall(metricsName, methodName)
+            when (result) {
+                is Mono<*> -> return registerListenersOnMono(result, metricsName, methodName)
+
+                // this project doesn't have any methods annotated by @{link Observed} that
+                // return a Flux
+                // is Flux<*> -> return registerListenersOnFlux(result, metricsName, methodName)
+                else -> metricsRegistry.registerSuccessServiceCall(metricsName, methodName)
             }
             return result
         } catch (ex: Exception) {
             metricsRegistry.registerFailureServiceCall(metricsName, methodName)
             throw ex
+        }
+    }
+
+    private fun registerListenersOnMono(mono: Mono<*>, metricsName: String, methodName: String): Mono<out Any> {
+
+        return mono.doOnNext {
+            metricsRegistry.registerSuccessServiceCall(metricsName, methodName)
+        }.doOnError {
+            metricsRegistry.registerFailureServiceCall(metricsName, methodName)
         }
     }
 

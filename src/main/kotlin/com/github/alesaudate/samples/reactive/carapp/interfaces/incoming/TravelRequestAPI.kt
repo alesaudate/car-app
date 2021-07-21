@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.github.alesaudate.samples.reactive.carapp.domain.TravelRequestStatus
 import com.github.alesaudate.samples.reactive.carapp.domain.TravelService
 import com.github.alesaudate.samples.reactive.carapp.extensions.ISO_LOCAL_DATE_TIME_PATTERN
+import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import com.github.alesaudate.samples.reactive.carapp.interfaces.incoming.mapping.TravelRequestMapper
 import org.springframework.hateoas.EntityModel
 import org.springframework.stereotype.Service
@@ -34,16 +35,18 @@ class TravelRequestAPI(
     fun makeTravelRequest(@RequestBody @Valid travelRequestInput: TravelRequestInput): Mono<EntityModel<TravelRequestOutput>> {
 
         return mapper.map(travelRequestInput)
+            .doOnNext { debug("Creating travel request: {}", it) }
             .flatMap { travelService.saveTravelRequest(it) }
             .flatMap { tr -> mapper.map(tr).map { tr to it } }
-            .flatMap { mapper.buildOutputModel(it.first, it.second) }
+            .map { mapper.buildOutputModel(it.first, it.second) }
     }
 
     @GetMapping("/nearby")
     fun listNearbyRequests(@RequestParam currentAddress: String): Flux<EntityModel<TravelRequestOutput>> {
+
         return travelService.findNearbyTravelRequests(currentAddress)
             .flatMap { tr -> mapper.map(tr).map { tr to it } }
-            .flatMap { mapper.buildOutputModel(it.first, it.second) }
+            .map { mapper.buildOutputModel(it.first, it.second) }
     }
 }
 

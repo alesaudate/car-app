@@ -11,18 +11,24 @@ class RedisReactiveCacheOperators(private val reactiveRedisTemplate: ReactiveRed
 
     override operator fun <T : Any?> invoke(publisher: Mono<T>, key: String, ttl: Duration): Mono<T> {
         val ops = reactiveRedisTemplate.opsForValue()
-
-        val result = ops.get(key).block()
-
-
         return Mono.just(key)
             .doOnNext { debug("Searching cache for content based on key {}", it) }
-            .flatMap { ops.get(key) }
-            .switchIfEmpty(publisher)
-            .flatMap { result ->
-                debug("Setting content on cache")
-                ops.set(key, result as Any, ttl).map { result }
+            .flatMap { key ->
+                ops.get(key).doOnNext {
+                    debug("Found data for key {} in cache", key)
+                }
             }
-            .map {   it as T }
+            .switchIfEmpty(publisher)
+            .zipWhen {
+                Mono.just(it)
+                    .doOnNext { debug("Setting content on cache: {}", it) }
+                    .doOnNext {
+                        ops.set(key, it as Any, ttl)
+                    }
+            }
+            .map {
+                debug("Returning {}", it.t1)
+                it.t1 as T
+            }
     }
 }

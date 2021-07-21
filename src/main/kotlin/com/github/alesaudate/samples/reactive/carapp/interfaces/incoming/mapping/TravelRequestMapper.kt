@@ -35,9 +35,9 @@ class TravelRequestMapper(
         )
     }
 
-    fun buildOutputModel(travelRequest: TravelRequest, output: TravelRequestOutput): Mono<EntityModel<TravelRequestOutput>> {
+    fun buildOutputModel(travelRequest: TravelRequest, output: TravelRequestOutput): EntityModel<TravelRequestOutput> {
 
         val link = Link.of("/passengers/${travelRequest.passenger.id}", "passenger")
-        return Mono.just(EntityModel.of(output, link))
+        return EntityModel.of(output, link)
     }
 }

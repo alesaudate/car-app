@@ -1,5 +1,6 @@
 package com.github.alesaudate.samples.reactive.carapp.observability
 
+import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import io.micrometer.core.instrument.MeterRegistry
 import org.springframework.stereotype.Component
 
@@ -8,9 +9,15 @@ class MetricsDataProvider(
     val metricsRegistry: MeterRegistry
 ) {
 
-    fun registerServiceCall(serviceName: String, methodName: String) = metricsRegistry.counter("$serviceName.$methodName.calls").increment()
+    fun registerServiceCall(serviceName: String, methodName: String) {
+        debug("Registering service call for service {} and method {}", serviceName, methodName)
+        metricsRegistry.counter("$serviceName.$methodName.calls").increment()
+    }
 
-    fun registerSuccessServiceCall(serviceName: String, methodName: String) = metricsRegistry.counter("$serviceName.$methodName.calls.successes").increment()
+    fun registerSuccessServiceCall(serviceName: String, methodName: String) {
+        debug("Registering successful service call for service {} and method {}", serviceName, methodName)
+        metricsRegistry.counter("$serviceName.$methodName.calls.successes").increment()
+    }
 
     fun registerFailureServiceCall(serviceName: String, methodName: String) = metricsRegistry.counter("$serviceName.$methodName.calls.failures").increment()
 
