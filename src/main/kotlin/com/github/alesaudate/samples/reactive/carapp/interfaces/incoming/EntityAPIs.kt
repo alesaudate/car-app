@@ -7,6 +7,7 @@ import com.github.alesaudate.samples.reactive.carapp.domain.DriverService
 import com.github.alesaudate.samples.reactive.carapp.domain.EntityService
 import com.github.alesaudate.samples.reactive.carapp.domain.Passenger
 import com.github.alesaudate.samples.reactive.carapp.domain.PassengerService
+import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import com.github.alesaudate.samples.reactive.carapp.interfaces.incoming.errorhandling.EntityNotFoundException
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
@@ -33,19 +34,26 @@ abstract class EntityAPI<T : Any, ID : Any, P : Any>(
     fun listAll() = entityService.findAll()
 
     @GetMapping("/{id}")
-    fun findSingle(@PathVariable("id") id: ID): Mono<T> =
-        entityService.findById(id)
-            .switchIfEmpty { throw entityNotFoundException() }
+    fun findSingle(@PathVariable("id") id: ID): Mono<T> = Mono.just(id)
+        .doOnNext { debug("Finding entity identified by {}", it) }
+        .flatMap { entityService.findById(id) }
+        .doOnNext { debug("Found entity identified by {}", it) }
+        .switchIfEmpty { throw entityNotFoundException() }
 
     @PostMapping
-    fun create(@RequestBody entity: T) = entityService.save(entity)
+    fun create(@RequestBody entity: T) = Mono.just(entity)
+        .doOnNext { debug("Creating entity {}", entity) }
+        .flatMap { entityService.save(it) }
+        .doOnNext { debug("Created entity {}", entity) }
 
     @PutMapping("/{id}")
     fun fullUpdate(@PathVariable("id") id: ID, @RequestBody @Valid entity: T): Mono<T> {
 
         return findSingle(id)
+            .doOnNext { debug("About to update entity {}", it) }
             .map { it copyFrom entity }
             .flatMap { entityService.save(it) }
+            .doOnNext { debug("Updated entity {}", it) }
     }
 
     @PatchMapping("/{id}")

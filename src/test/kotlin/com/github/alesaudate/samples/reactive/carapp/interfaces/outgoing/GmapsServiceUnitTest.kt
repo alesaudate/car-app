@@ -1,6 +1,5 @@
 package com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing
 
-import com.github.alesaudate.samples.reactive.carapp.extensions.CacheOperatorMock
 import com.github.alesaudate.samples.reactive.carapp.randomAddress
 import io.mockk.every
 import io.mockk.mockk
@@ -33,7 +32,7 @@ import java.net.URI
 import java.util.function.Consumer
 import java.util.function.Function
 
-@SpringBootTest(classes = [GmapsService::class, MockWebClientBuilder::class, CacheOperatorMock::class])
+@SpringBootTest(classes = [GmapsService::class, MockWebClientBuilder::class])
 @TestPropertySource(properties = ["app.interfaces.outcoming.gmaps.appKey=123"])
 class GmapsServiceUnitTest {
 

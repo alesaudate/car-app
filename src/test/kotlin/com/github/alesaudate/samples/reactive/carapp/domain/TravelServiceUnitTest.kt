@@ -1,5 +1,6 @@
 package com.github.alesaudate.samples.reactive.carapp.domain
 
+import com.github.alesaudate.samples.reactive.carapp.extensions.CacheOperatorMock
 import com.github.alesaudate.samples.reactive.carapp.fixtures.randomTravelRequest
 import com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing.GmapsService
 import com.github.alesaudate.samples.reactive.carapp.randomAddress
@@ -17,7 +18,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.random.Random
 
-@SpringBootTest(classes = [TravelService::class])
+@SpringBootTest(classes = [TravelService::class, CacheOperatorMock::class])
 class TravelServiceUnitTest {
 
     @Autowired

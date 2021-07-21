@@ -1,7 +1,7 @@
 package com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing
 
-import com.github.alesaudate.samples.reactive.carapp.caching.CacheOperator
 import com.github.alesaudate.samples.reactive.carapp.extensions.debug
+import com.github.alesaudate.samples.reactive.carapp.extensions.trace
 import com.github.alesaudate.samples.reactive.carapp.extensions.warn
 import com.github.alesaudate.samples.reactive.carapp.observability.Observed
 import com.jayway.jsonpath.DocumentContext
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
-import java.time.Duration
 
 @Service
 class GmapsService(
@@ -25,39 +24,35 @@ class GmapsService(
     val gMapsHost: String,
 
     @Qualifier("GMaps")
-    val webClientBuilder: WebClient.Builder,
-
-    val cache: CacheOperator
+    val webClientBuilder: WebClient.Builder
 ) {
 
     @Observed("gmapsClient")
     @CircuitBreaker(name = "GMaps")
     fun getDistanceBetweenAddresses(addressOne: String, addressTwo: String): Mono<Int> {
 
-        return cache(
-            webClientBuilder
-                .baseUrl(gMapsHost)
-                .build()
-                .get()
-                .uri { uriBuilder ->
-                    uriBuilder.path(GMAPS_RESOURCE)
-                        .queryParam("origin", addressOne)
-                        .queryParam("destination", addressTwo)
-                        .queryParam("key", appKey)
-                        .build()
-                }
-                .retrieve()
-                .toEntity(String::class.java)
-                .mapNotNull { it.body }
-                .map { asDocumentContext(it!!) }
-                .doOnNext { detectError(it) }
-                .map { findDuration(it!!) }
-                .doOnError {
-                    throwable ->
-                    warn("Google Maps could not fetch data for distance between $addressOne and $addressTwo", throwable)
-                },
-            "$addressOne-v-$addressTwo", Duration.ofSeconds(30)
-        )
+        return webClientBuilder
+            .baseUrl(gMapsHost)
+            .build()
+            .get()
+            .uri { uriBuilder ->
+                uriBuilder.path(GMAPS_RESOURCE)
+                    .queryParam("origin", addressOne)
+                    .queryParam("destination", addressTwo)
+                    .queryParam("key", appKey)
+                    .build()
+            }
+            .retrieve()
+            .toEntity(String::class.java)
+            .mapNotNull { it.body }
+            .map { asDocumentContext(it!!) }
+            .doOnNext { debug("Used Gmaps to retrieve distances.") }
+            .doOnNext { detectError(it) }
+            .map { findDuration(it!!) }
+            .doOnError {
+                throwable ->
+                warn("Google Maps could not fetch data for distance between $addressOne and $addressTwo", throwable)
+            }
     }
 
     private fun asDocumentContext(body: String) = JsonPath.parse(body)
@@ -68,7 +63,7 @@ class GmapsService(
             val errorMessage = documentContext.read<String>("\$.error_message")
             errorMessage.let { throw GMapsException(it) }
         } catch (e: PathNotFoundException) {
-            debug("No errors have been found in {}", documentContext)
+            trace("No errors have been found in {}", documentContext.jsonString())
         }
     }
 

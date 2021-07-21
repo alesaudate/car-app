@@ -127,8 +127,7 @@ internal class RedisReactiveCacheOperatorsUnitTest {
             actualMono,
             randomKey,
             duration
-        )
-            .block()!!
+        ).block()!!
 
         // assert
         assertEquals(randomValue, resultingValue)

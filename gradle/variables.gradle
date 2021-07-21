@@ -1,17 +1,18 @@
 buildscript {
     ext {
         coverageLimits = [
-                'instruction':98.81,
-                'branch': 81.58,
+                'instruction':98.91,
+                'branch': 82.5,
                 'line': 100.0,
-                'complexity': 96.35,
+                'complexity': 96.71,
                 'method': 100.0,
                 'class': 100.0
 
         ]
 
         coverageExclusions = [
-                '**/CarAppApplication*'
+                '**/CarAppApplication*',
+                '**/Logging*'
         ]
     }
 }

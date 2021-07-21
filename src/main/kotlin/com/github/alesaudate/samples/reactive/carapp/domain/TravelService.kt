@@ -1,5 +1,6 @@
 package com.github.alesaudate.samples.reactive.carapp.domain
 
+import com.github.alesaudate.samples.reactive.carapp.caching.CacheOperator
 import com.github.alesaudate.samples.reactive.carapp.extensions.debug
 import com.github.alesaudate.samples.reactive.carapp.extensions.info
 import com.github.alesaudate.samples.reactive.carapp.interfaces.outgoing.GmapsService
@@ -19,7 +20,9 @@ class TravelService(
     val gmapsService: GmapsService,
 
     @Value("\${app.domain.travel.request.maxtime:600}")
-    val maxTravelTime: Int
+    val maxTravelTime: Int,
+
+    val cache: CacheOperator
 ) {
 
     private val scheduler = Schedulers.boundedElastic()
@@ -38,7 +41,7 @@ class TravelService(
     fun findNearbyTravelRequests(currentAddress: String): Flux<TravelRequest> {
 
         return findCreatedTravelRequests()
-            .flatMap { tr -> gmapsService.getDistanceBetweenAddresses(currentAddress, tr.origin).map { tr to it } }
+            .flatMap { tr -> cache(gmapsService.getDistanceBetweenAddresses(currentAddress, tr.origin), "${currentAddress}-v-${tr.origin}", Duration.ofSeconds(30)).map { tr to it } }
             .filter { it.second <= maxTravelTime }
             .map { it.first }
     }
@@ -59,7 +62,5 @@ class TravelService(
 
     private fun findCreatedTravelRequests(): Flux<TravelRequest> {
         return Flux.fromIterable(travelRequestRepository.findByStatus(TravelRequestStatus.CREATED))
-            .cache(Duration.ofSeconds(30))
-            .subscribeOn(scheduler)
     }
 }
